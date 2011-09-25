@@ -1,0 +1,10 @@
+{
+  "name":"feed-commenter",
+  "version":"0.0.1",
+  "dependencies":{
+    "express":"",
+    "socket.io":"",
+    "jasmine-node":"",
+    "libxml-to-js":""
+  }
+}
