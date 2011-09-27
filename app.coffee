@@ -20,13 +20,10 @@ parser xml, '//item', (err, result) ->
   results.push new FeedItem(item.title, item['dc:date']) for item in result when filter(item.title)
 
 
-# coffeeDir = _dirname + '/public/coffee'
 publicDir = __dirname + '/public'
-# app.use express.compiler(src: 'coffeeDir, dest: publicDir
 app.use express.static(publicDir)
 
-# app.get '/', (req, res) ->
-#   res.send results
+app.use require('connect-assets')()
 
 app.listen 8090
 
