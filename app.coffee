@@ -19,7 +19,20 @@ xml = fs.readFileSync('data/recentlyDeployedReleaseArtifacts.xml').toString()
 parser xml, '//item', (err, result) ->
   results.push new FeedItem(item.title, item['dc:date']) for item in result when filter(item.title)
 
-app.get '/', (req, res) ->
-  res.send results
+
+# coffeeDir = _dirname + '/public/coffee'
+publicDir = __dirname + '/public'
+# app.use express.compiler(src: 'coffeeDir, dest: publicDir
+app.use express.static(publicDir)
+
+# app.get '/', (req, res) ->
+#   res.send results
 
 app.listen 8090
+
+io = require('socket.io').listen app
+
+io.sockets.on 'connection', (socket) ->
+  socket.emit 'news', {hello: 'world' }
+  socket.on 'my other event', (data) ->
+    console.log data
