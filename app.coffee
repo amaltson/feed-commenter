@@ -30,6 +30,6 @@ app.listen 8090
 io = require('socket.io').listen app
 
 io.sockets.on 'connection', (socket) ->
-  socket.emit 'news', {hello: 'world' }
+  socket.emit 'init', results
   socket.on 'my other event', (data) ->
     console.log data
