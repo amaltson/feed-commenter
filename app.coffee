@@ -10,14 +10,17 @@ filter = (title) ->
   not regex.exec(title)
 
 class FeedItem
-  constructor: (@title, @date) ->
+  constructor: (@id, @title, @date) ->
 
   addComment: (@comment) ->
 
 results = []
 xml = fs.readFileSync('data/recentlyDeployedReleaseArtifacts.xml').toString()
+id = 0
 parser xml, '//item', (err, result) ->
-  results.push new FeedItem(item.title, item['dc:date']) for item in result when filter(item.title)
+  for item in result when filter(item.title)
+    results.push new FeedItem(id, item.title, item['dc:date'])
+    id += 1
 
 
 publicDir = __dirname + '/public'
@@ -31,5 +34,7 @@ io = require('socket.io').listen app
 
 io.sockets.on 'connection', (socket) ->
   socket.emit 'init', results
-  socket.on 'my other event', (data) ->
-    console.log data
+  socket.on 'comment', (data) ->
+    for item in results when item.id == data.id
+      item.addComment data.comment
+    socket.emit 'init', results
