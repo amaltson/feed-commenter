@@ -1,9 +1,9 @@
-require.paths.unshift('./node_modules')
-
 express = require 'express'
 app = express.createServer()
 fs = require 'fs'
-parser = require 'libxml-to-js'
+xml2js = require 'xml2js'
+
+parser = new xml2js.Parser()
 
 filter = (title) ->
   regex = /:(sources|tests|javadoc)/
@@ -14,12 +14,12 @@ class FeedItem
 
   addComment: (@comment) ->
 
-results = []
+parsed = []
 xml = fs.readFileSync('data/recentlyDeployedReleaseArtifacts.xml').toString()
 id = 0
-parser xml, '//item', (err, result) ->
-  for item in result when filter(item.title)
-    results.push new FeedItem(id, item.title, item['dc:date'])
+parser.parseString xml, (err, result) ->
+  for item in result.channel.item when filter(item.title)
+    parsed.push new FeedItem(id, item.title, item['dc:date'])
     id += 1
 
 
@@ -28,13 +28,16 @@ app.use express.static(publicDir)
 
 app.use require('connect-assets')()
 
+js('script')
+
 app.listen 8090
 
 io = require('socket.io').listen app
 
 io.sockets.on 'connection', (socket) ->
-  socket.emit 'init', results
+  socket.emit 'init', parsed
   socket.on 'comment', (data) ->
-    for item in results when item.id == data.id
+    for item in parsed when item.id == data.id
       item.addComment data.comment
-    socket.emit 'init', results
+    socket.emit 'init', parsed
+
