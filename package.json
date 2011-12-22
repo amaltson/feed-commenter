@@ -2,12 +2,12 @@
   "name":"feed-commenter",
   "version":"0.0.1",
   "dependencies":{
-    "coffee-script":"*",
-    "express":"*",
-    "connect-assets":"*",
-    "socket.io":"*",
-    "jasmine-node":"*",
-    "xml2js":"*",
-    "mongoose":"*"
+    "coffee-script":"1.2.*",
+    "express":"2.5.*",
+    "connect-assets":"2.1.*",
+    "socket.io":"0.8.*",
+    "jasmine-node":"1.0.*",
+    "xml2js":"0.1.*",
+    "mongoose":"2.4.*"
   }
 }
